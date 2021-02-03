@@ -42,13 +42,13 @@ class CustomerServiceImplTest {
 
     @Test
     fun testUpdateCustomer() {
-        val customer = Customer.Builder()
-                .withCustomerId(id)
-                .withFirstName("Yogi")
-                .withLastName("Bear")
-                .withPhone("8005550001")
-                .withEmail("main.bear@jellystone.gov")
-                .build()
+        val customer = Customer(
+                customerId = id,
+                firstName = "Yogi",
+                lastName = "Bear",
+                phone = "8005550001",
+                email = "main.bear@jellystone.gov")
+
         val serviceResult = service!!.updateCustomer(customer)
         Assert.assertEquals(customer, serviceResult)
         val entity = repository!!.findById(id)
@@ -59,13 +59,13 @@ class CustomerServiceImplTest {
     @Test
     fun testUpdateCustomer_invalidId() {
         val invalidId: Long = 9999
-        val customer = Customer.Builder()
-                .withCustomerId(invalidId)
-                .withFirstName("Yogi")
-                .withLastName("Bear")
-                .withPhone("8005550001")
-                .withEmail("main.bear@jellystone.gov")
-                .build()
+        val customer = Customer(
+                customerId = invalidId,
+                firstName = "Yogi",
+                lastName = "Bear",
+                phone = "8005550001",
+                email = "main.bear@jellystone.gov")
+
         val serviceResult = service!!.updateCustomer(customer)
         Assert.assertNull(serviceResult)
         val entity = repository!!.findById(invalidId)
@@ -74,7 +74,7 @@ class CustomerServiceImplTest {
 
     @Test
     fun testAddAndDeleteCustomer() {
-        val customer = Customer.Builder().withFirstName("Teen").withLastName("Titans").withPhone("8005557777").build()
+        val customer = Customer(firstName = "Teen", lastName = "Titans", phone = "8005557777")
         val expectedCount = repository!!.count() + 1
         val entity = service!!.addCustomer(customer)
         Assert.assertEquals(expectedCount, repository.count())

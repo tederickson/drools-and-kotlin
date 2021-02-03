@@ -122,11 +122,11 @@ class MortgageLoanServiceImplTest {
 
     @Test
     fun testUpdateStatus_missingPhone() {
-        val customer = Customer.Builder()
-                .withFirstName("Yogi")
-                .withLastName("Bear")
-                .withEmail("main.bear@jellystone.gov")
-                .build()
+        val customer = Customer(
+                firstName = "Yogi",
+                lastName = "Bear",
+                email = "main.bear@jellystone.gov")
+
         val entity = customerRepository!!.save(customer)
         val (mortgageId) = service!!.addMortgageLoan(entity, 1)
         val mortgageLoanStatus = service.updateStatus(mortgageId)
@@ -135,7 +135,7 @@ class MortgageLoanServiceImplTest {
 
     @Test
     fun testUpdateStatus_missingEmail() {
-        val customer = Customer.Builder().withFirstName("Yogi").withLastName("Bear").withPhone("8005550001").build()
+        val customer = Customer(firstName = "Yogi", lastName = "Bear", phone = "8005550001")
         val entity = customerRepository!!.save(customer)
         val (mortgageId) = service!!.addMortgageLoan(entity, 1)
         val mortgageLoanStatus = service.updateStatus(mortgageId)
