@@ -11,12 +11,13 @@ import org.springframework.test.context.junit4.SpringRunner
 @DataJpaTest
 class LoanOfficerRepositoryTest {
     @Autowired
-    private val repository: LoanOfficerRepository? = null
+    lateinit var repository: LoanOfficerRepository
+
     private val id = 1L
 
     @Test
     fun testFindAll() {
-        val los = repository!!.findAll()
+        val los = repository.findAll()
         Assert.assertNotNull(los)
         for (loanOfficer in los) {
             println("loanOfficer = $loanOfficer")
@@ -25,7 +26,7 @@ class LoanOfficerRepositoryTest {
 
     @Test
     fun testFindById() {
-        val entity = repository!!.findById(id)
+        val entity = repository.findById(id)
         Assert.assertTrue(entity.isPresent)
         val (loanOfficerId, firstName, lastName, phone, email, managerId) = entity.get()
         Assert.assertEquals(id, loanOfficerId)
@@ -38,12 +39,12 @@ class LoanOfficerRepositoryTest {
 
     @Test
     fun testExistsById() {
-        Assert.assertTrue(repository!!.existsById(id))
+        Assert.assertTrue(repository.existsById(id))
         Assert.assertFalse(repository.existsById(1234L))
     }
 
     @Test
     fun testCount() {
-        Assert.assertEquals(2, repository!!.count())
+        Assert.assertEquals(2, repository.count())
     }
 }

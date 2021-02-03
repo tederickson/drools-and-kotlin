@@ -15,21 +15,22 @@ import org.springframework.test.context.junit4.SpringRunner
 @SpringBootTest
 class LoanOfficerServiceImplTest {
     @Autowired
-    private val repository: LoanOfficerRepository? = null
+    lateinit var repository: LoanOfficerRepository
 
     @Autowired
-    private val service: LoanOfficerService? = null
+    lateinit var service: LoanOfficerService
+
     private val id = 1L
 
     @Before
     fun resetLoanOfficer() {
         val original = LoanOfficer(id, "Friendly", "Officer", "3035557777", "puppies@gmail.com", 12345, "ACTIVE")
-        repository!!.saveAndFlush(original)
+        repository.saveAndFlush(original)
     }
 
     @Test
     fun testFindById() {
-        val loanOfficer = service!!.getLoanOfficerById(id)
+        val loanOfficer = service.getLoanOfficerById(id)
         Assert.assertNotNull(loanOfficer)
         Assert.assertEquals(id, loanOfficer!!.loanOfficerId)
         Assert.assertEquals("Friendly", loanOfficer.firstName)
@@ -41,7 +42,7 @@ class LoanOfficerServiceImplTest {
 
     @Test
     fun testFindAll() {
-        val loanOfficers: List<LoanOfficer?> = service!!.getLoanOfficers()
+        val loanOfficers: List<LoanOfficer?> = service.getLoanOfficers()
         Assert.assertEquals(2, loanOfficers.size.toLong())
         for (loanOfficer in loanOfficers) {
             println("loanOfficer = {loanOfficer}")
@@ -58,8 +59,8 @@ class LoanOfficerServiceImplTest {
         loanOfficer.email = ""
         loanOfficer.phone = ""
         loanOfficer.managerId = -1
-        Assert.assertTrue(service!!.updateLoanOfficer(loanOfficer))
-        val entity = repository!!.findById(id)
+        Assert.assertTrue(service.updateLoanOfficer(loanOfficer))
+        val entity = repository.findById(id)
         Assert.assertTrue(entity.isPresent)
         val (_, firstName, lastName) = entity.get()
         Assert.assertEquals(loanOfficer.firstName, firstName)
@@ -71,16 +72,16 @@ class LoanOfficerServiceImplTest {
         val invalidId: Long = 9999
         val loanOfficer = LoanOfficer()
         loanOfficer.loanOfficerId = invalidId
-        Assert.assertFalse(service!!.updateLoanOfficer(loanOfficer))
-        val entity = repository!!.findById(invalidId)
+        Assert.assertFalse(service.updateLoanOfficer(loanOfficer))
+        val entity = repository.findById(invalidId)
         Assert.assertFalse(entity.isPresent)
     }
 
     @Test
     fun testAddLoanOfficer() {
         val loanOfficer = LoanOfficer(-1, "Apple", "Pie", "8005557777", "nope", 2134, LoanOfficerActive.ACTIVE.toString())
-        val expectedCount = repository!!.count() + 1
-        val entity = service!!.addLoanOfficer(loanOfficer)
+        val expectedCount = repository.count() + 1
+        val entity = service.addLoanOfficer(loanOfficer)
         Assert.assertEquals(expectedCount, repository.count())
         loanOfficer.loanOfficerId = entity.loanOfficerId
         Assert.assertEquals(loanOfficer, entity)

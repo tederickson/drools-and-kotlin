@@ -13,15 +13,16 @@ import org.springframework.test.context.junit4.SpringRunner
 @SpringBootTest
 class CustomerServiceImplTest {
     @Autowired
-    private val repository: CustomerRepository? = null
+    lateinit var repository: CustomerRepository
 
     @Autowired
-    private val service: CustomerService? = null
+    lateinit var service: CustomerService
+
     private val id = 4L
 
     @Test
     fun testFindById() {
-        val entity = service!!.getCustomerById(id)
+        val entity = service.getCustomerById(id)
         Assert.assertTrue(entity.isPresent)
         val (customerId, firstName, lastName, phone, email) = entity.get()
         Assert.assertEquals(id, customerId)
@@ -33,7 +34,7 @@ class CustomerServiceImplTest {
 
     @Test
     fun testFindAll() {
-        val customers: List<Customer?> = service!!.getCustomers()
+        val customers: List<Customer?> = service.getCustomers()
         Assert.assertEquals(4, customers.size.toLong())
         for (customer in customers) {
             println("customer = $customer")
@@ -49,9 +50,9 @@ class CustomerServiceImplTest {
                 phone = "8005550001",
                 email = "main.bear@jellystone.gov")
 
-        val serviceResult = service!!.updateCustomer(customer)
+        val serviceResult = service.updateCustomer(customer)
         Assert.assertEquals(customer, serviceResult)
-        val entity = repository!!.findById(id)
+        val entity = repository.findById(id)
         Assert.assertTrue(entity.isPresent)
         Assert.assertEquals(customer, entity.get())
     }
@@ -66,17 +67,17 @@ class CustomerServiceImplTest {
                 phone = "8005550001",
                 email = "main.bear@jellystone.gov")
 
-        val serviceResult = service!!.updateCustomer(customer)
+        val serviceResult = service.updateCustomer(customer)
         Assert.assertNull(serviceResult)
-        val entity = repository!!.findById(invalidId)
+        val entity = repository.findById(invalidId)
         Assert.assertFalse(entity.isPresent)
     }
 
     @Test
     fun testAddAndDeleteCustomer() {
         val customer = Customer(firstName = "Teen", lastName = "Titans", phone = "8005557777")
-        val expectedCount = repository!!.count() + 1
-        val entity = service!!.addCustomer(customer)
+        val expectedCount = repository.count() + 1
+        val entity = service.addCustomer(customer)
         Assert.assertEquals(expectedCount, repository.count())
         customer.customerId = entity.customerId
         Assert.assertEquals(customer, entity)
