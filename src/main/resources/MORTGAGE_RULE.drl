@@ -1,0 +1,79 @@
+package MortgageRule
+
+import com.example.mortgage.model.*;
+import java.util.*;
+
+dialect "java"
+
+// -- Debug --
+rule "Print loan"
+  when
+    anObject: MortgageLoan()
+  then
+    System.out.println("Print loan = " + anObject);
+end
+
+rule "Print LoanOfficer"
+  when
+    anObject: LoanOfficer()
+  then
+    System.out.println("Print LoanOfficer = " + anObject);
+end
+
+rule "Print Customer"
+  when
+    anObject: Customer()
+  then
+    System.out.println("Print Customer = " + anObject);
+end
+
+// -- Validation --
+
+rule "Invalid Loan Officer"
+  when
+    not LoanOfficer()
+  then
+    System.out.println("Invalid Loan Officer");
+    insert(MortgageLoanStatus.LOAN_OFFICER_INCOMPLETE);
+end
+
+rule "Customer missing first name"
+  when
+    $c : Customer(firstName == null || firstName.trim().isEmpty())
+  then
+    System.out.println("Customer missing first name");
+    insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
+end
+
+rule "Customer missing last name"
+  when
+    $c : Customer(lastName == null || lastName.trim().isEmpty())
+  then
+    System.out.println("Customer missing last name");
+    insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
+end
+
+rule "Customer missing phone"
+  when
+    $c : Customer(phone == null || phone.trim().isEmpty())
+  then
+    System.out.println("Customer missing phone");
+    insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
+end
+
+rule "Customer missing email"
+  when
+    $c : Customer(email == null || email.trim().isEmpty())
+  then
+    System.out.println("Customer missing email");
+    insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
+end
+
+// -- Business rules --
+rule "Set MortgageLoanStatus"
+  when
+    $status: MortgageLoanStatus()
+    $loan: MortgageLoan()
+  then
+    $loan.setStatusEnum($status.toString());
+end
