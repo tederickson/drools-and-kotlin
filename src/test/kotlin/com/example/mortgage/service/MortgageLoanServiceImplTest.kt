@@ -4,7 +4,6 @@ import com.example.mortgage.model.Customer
 import com.example.mortgage.model.MortgageLoan
 import com.example.mortgage.model.MortgageLoanStatus
 import com.example.mortgage.repository.CustomerRepository
-import com.example.mortgage.repository.LoanOfficerRepository
 import com.example.mortgage.repository.MortgageLoanRepository
 import org.junit.Assert
 import org.junit.Before
@@ -20,9 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner
 class MortgageLoanServiceImplTest {
     @Autowired
     private val mortgageLoanRepository: MortgageLoanRepository? = null
-
-    @Autowired
-    private val loanOfficerRepository: LoanOfficerRepository? = null
 
     @Autowired
     private val customerRepository: CustomerRepository? = null
