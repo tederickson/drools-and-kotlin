@@ -31,7 +31,7 @@ class MortgageLoanRepositoryTest {
         val (mortgageId, customerId, loanOfficerId) = entity.get()
         Assert.assertEquals(id, mortgageId)
         Assert.assertEquals(2, customerId)
-        Assert.assertEquals(1L, loanOfficerId);
+        Assert.assertEquals(1L, loanOfficerId)
     }
 
     @Test
@@ -42,7 +42,7 @@ class MortgageLoanRepositoryTest {
         val (mortgageId, customerId, loanOfficerId) = loans[0]
         Assert.assertEquals(1, mortgageId)
         Assert.assertEquals(2, customerId)
-        Assert.assertEquals(1L, loanOfficerId);
+        Assert.assertEquals(1L, loanOfficerId)
     }
 
     @Test
