@@ -1,178 +1,144 @@
-package com.example.mortgage.service;
+package com.example.mortgage.service
 
-import com.example.mortgage.model.Customer;
-import com.example.mortgage.model.MortgageLoan;
-import com.example.mortgage.model.MortgageLoanStatus;
-import com.example.mortgage.repository.CustomerRepository;
-import com.example.mortgage.repository.LoanOfficerRepository;
-import com.example.mortgage.repository.MortgageLoanRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import com.example.mortgage.model.Customer
+import com.example.mortgage.model.MortgageLoan
+import com.example.mortgage.model.MortgageLoanStatus
+import com.example.mortgage.repository.CustomerRepository
+import com.example.mortgage.repository.LoanOfficerRepository
+import com.example.mortgage.repository.MortgageLoanRepository
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.dao.DataAccessException
+import org.springframework.test.context.junit4.SpringRunner
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-@RunWith(SpringRunner.class)
+@RunWith(SpringRunner::class)
 @SpringBootTest
-public class MortgageLoanServiceImplTest {
+class MortgageLoanServiceImplTest {
+    @Autowired
+    private val mortgageLoanRepository: MortgageLoanRepository? = null
 
     @Autowired
-    private MortgageLoanRepository mortgageLoanRepository;
+    private val loanOfficerRepository: LoanOfficerRepository? = null
 
     @Autowired
-    private LoanOfficerRepository loanOfficerRepository;
+    private val customerRepository: CustomerRepository? = null
 
     @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private MortgageLoanService service;
+    private val service: MortgageLoanService? = null
 
     @Before
-    public void initialize() {
-
-        final List<MortgageLoan> loans = mortgageLoanRepository.findAll();
-        for (MortgageLoan loan : loans) {
-            if (loan.getMortgageId() > 1) {
-                mortgageLoanRepository.delete(loan);
+    fun initialize() {
+        val loans = mortgageLoanRepository!!.findAll()
+        for (loan in loans) {
+            if (loan!!.mortgageId > 1) {
+                mortgageLoanRepository.delete(loan)
             }
         }
     }
 
     @Test
-    public void addMortgageLoan() {
-
-        final Optional<Customer> customer = customerRepository.findById(3L);
-        assertTrue(customer.isPresent());
-        final MortgageLoan mortgageLoan = service.addMortgageLoan(customer.get());
-
-        assertNotNull(mortgageLoan);
-        validate(MortgageLoanStatus.STARTED, mortgageLoan);
+    fun addMortgageLoan() {
+        val customer = customerRepository!!.findById(3L)
+        Assert.assertTrue(customer.isPresent)
+        val mortgageLoan = service!!.addMortgageLoan(customer.get())
+        Assert.assertNotNull(mortgageLoan)
+        validate(MortgageLoanStatus.STARTED, mortgageLoan)
     }
 
-    private void validate(MortgageLoanStatus mortgageLoanStatus, MortgageLoan mortgageLoan) {
-
-        final MortgageLoanStatus actual = MortgageLoanStatus.valueOf(mortgageLoan.getStatusEnum());
-        assertEquals(mortgageLoanStatus, actual);
+    private fun validate(mortgageLoanStatus: MortgageLoanStatus, mortgageLoan: MortgageLoan) {
+        val actual = MortgageLoanStatus.valueOf(mortgageLoan.statusEnum)
+        Assert.assertEquals(mortgageLoanStatus, actual)
     }
 
     @Test
-    public void testFindByCustomerId() {
-
-        final List<MortgageLoan> loans = service.findByCustomerId(2);
-        assertNotNull(loans);
-        assertEquals(1, loans.size());
+    fun testFindByCustomerId() {
+        val loans = service!!.findByCustomerId(2)
+        Assert.assertNotNull(loans)
+        Assert.assertEquals(1, loans.size.toLong())
     }
 
     @Test
-    public void testFindByCustomerId_InvalidId() {
-
-        final List<MortgageLoan> loans = service.findByCustomerId(1000);
-        assertTrue(loans.isEmpty());
+    fun testFindByCustomerId_InvalidId() {
+        val loans = service!!.findByCustomerId(1000)
+        Assert.assertTrue(loans.isEmpty())
     }
 
     @Test
-    public void testFindByLoanOfficerId() {
-
-        final List<MortgageLoan> loans = service.findByLoanOfficerId(1);
-        assertNotNull(loans);
-        assertEquals(1, loans.size());
+    fun testFindByLoanOfficerId() {
+        val loans = service!!.findByLoanOfficerId(1)
+        Assert.assertNotNull(loans)
+        Assert.assertEquals(1, loans.size.toLong())
     }
 
     @Test
-    public void testFindByLoanOfficerId_InvalidId() {
-
-        final List<MortgageLoan> loans = service.findByLoanOfficerId(12345);
-        assertTrue(loans.isEmpty());
+    fun testFindByLoanOfficerId_InvalidId() {
+        val loans = service!!.findByLoanOfficerId(12345)
+        Assert.assertTrue(loans.isEmpty())
     }
 
     @Test
-    public void testFindByMortgageIdId() {
-
-        final MortgageLoan loan = service.findByMortgageId(1);
-        assertNotNull(loan);
-        validate(MortgageLoanStatus.APPROVED, loan);
+    fun testFindByMortgageIdId() {
+        val loan = service!!.findByMortgageId(1)
+        Assert.assertNotNull(loan)
+        validate(MortgageLoanStatus.APPROVED, loan)
     }
 
-    @Test(expected = org.springframework.dao.DataAccessException.class)
-    public void testFindByMortgageId_InvalidId() {
-
-        service.findByMortgageId(11743);
-    }
-
-    @Test
-    public void testUpdateStatus() {
-
-        final MortgageLoanStatus mortgageLoanStatus = service.updateStatus(1);
-
-        assertEquals(MortgageLoanStatus.APPROVED, mortgageLoanStatus);
+    @Test(expected = DataAccessException::class)
+    fun testFindByMortgageId_InvalidId() {
+        service!!.findByMortgageId(11743)
     }
 
     @Test
-    public void testAddLoanOfficer() {
-
-        final Optional<Customer> customer = customerRepository.findById(3L);
-        assertTrue(customer.isPresent());
-        final MortgageLoan mortgageLoan = service.addMortgageLoan(customer.get());
-        final long mortgageId = mortgageLoan.getMortgageId();
-        service.addLoanOfficer(mortgageId, 1);
-
-        final MortgageLoan entity = mortgageLoanRepository.getOne(mortgageId);
-
-        assertEquals(mortgageId, entity.getMortgageId());
-        assertNotNull(entity.getLoanOfficerId());
-        assertEquals(1L, entity.getLoanOfficerId().longValue());
+    fun testUpdateStatus() {
+        val mortgageLoanStatus = service!!.updateStatus(1)
+        Assert.assertEquals(MortgageLoanStatus.APPROVED, mortgageLoanStatus)
     }
 
     @Test
-    public void testGetNewLoanStatus() {
-
-        final Optional<Customer> customer = customerRepository.findById(3L);
-        assertTrue(customer.isPresent());
-        final MortgageLoan mortgageLoan = service.addMortgageLoan(customer.get());
-
-        assertNotNull(mortgageLoan);
-
-        final MortgageLoanStatus mortgageLoanStatus = service.updateStatus(mortgageLoan.getMortgageId());
-
-        assertEquals(MortgageLoanStatus.LOAN_OFFICER_INCOMPLETE, mortgageLoanStatus);
+    fun testAddLoanOfficer() {
+        val customer = customerRepository!!.findById(3L)
+        Assert.assertTrue(customer.isPresent)
+        val (mortgageId) = service!!.addMortgageLoan(customer.get())
+        service.addLoanOfficer(mortgageId, 1)
+        val (mortgageId1, _, loanOfficerId) = mortgageLoanRepository!!.getOne(mortgageId)
+        Assert.assertEquals(mortgageId, mortgageId1)
+        Assert.assertNotNull(loanOfficerId)
+        Assert.assertEquals(1L, loanOfficerId!!.toLong())
     }
 
     @Test
-    public void testUpdateStatus_missingPhone() {
-
-        final Customer customer = new Customer.Builder()
-            .withFirstName("Yogi")
-            .withLastName("Bear")
-            .withEmail("main.bear@jellystone.gov")
-            .build();
-
-        final Customer entity = customerRepository.save(customer);
-        final MortgageLoan mortgageLoan = service.addMortgageLoan(entity, 1);
-        final MortgageLoanStatus mortgageLoanStatus = service.updateStatus(mortgageLoan.getMortgageId());
-
-        assertEquals(MortgageLoanStatus.USER_INFO_INCOMPLETE, mortgageLoanStatus);
+    fun testGetNewLoanStatus() {
+        val customer = customerRepository!!.findById(3L)
+        Assert.assertTrue(customer.isPresent)
+        val mortgageLoan = service!!.addMortgageLoan(customer.get())
+        Assert.assertNotNull(mortgageLoan)
+        val mortgageLoanStatus = service.updateStatus(mortgageLoan.mortgageId)
+        Assert.assertEquals(MortgageLoanStatus.LOAN_OFFICER_INCOMPLETE, mortgageLoanStatus)
     }
 
     @Test
-    public void testUpdateStatus_missingEmail() {
-
-        final Customer customer =
-            new Customer.Builder().withFirstName("Yogi").withLastName("Bear").withPhone("8005550001").build();
-
-        final Customer entity = customerRepository.save(customer);
-        final MortgageLoan mortgageLoan = service.addMortgageLoan(entity, 1);
-        final MortgageLoanStatus mortgageLoanStatus = service.updateStatus(mortgageLoan.getMortgageId());
-
-        assertEquals(MortgageLoanStatus.USER_INFO_INCOMPLETE, mortgageLoanStatus);
+    fun testUpdateStatus_missingPhone() {
+        val customer = Customer.Builder()
+                .withFirstName("Yogi")
+                .withLastName("Bear")
+                .withEmail("main.bear@jellystone.gov")
+                .build()
+        val entity = customerRepository!!.save(customer)
+        val (mortgageId) = service!!.addMortgageLoan(entity, 1)
+        val mortgageLoanStatus = service.updateStatus(mortgageId)
+        Assert.assertEquals(MortgageLoanStatus.USER_INFO_INCOMPLETE, mortgageLoanStatus)
     }
 
+    @Test
+    fun testUpdateStatus_missingEmail() {
+        val customer = Customer.Builder().withFirstName("Yogi").withLastName("Bear").withPhone("8005550001").build()
+        val entity = customerRepository!!.save(customer)
+        val (mortgageId) = service!!.addMortgageLoan(entity, 1)
+        val mortgageLoanStatus = service.updateStatus(mortgageId)
+        Assert.assertEquals(MortgageLoanStatus.USER_INFO_INCOMPLETE, mortgageLoanStatus)
+    }
 }

@@ -1,69 +1,49 @@
-package com.example.mortgage.repository;
+package com.example.mortgage.repository
 
-import com.example.mortgage.model.LoanOfficer;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.test.context.junit4.SpringRunner
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-@RunWith(SpringRunner.class)
+@RunWith(SpringRunner::class)
 @DataJpaTest
-public class LoanOfficerRepositoryTest {
-
+class LoanOfficerRepositoryTest {
     @Autowired
-    private LoanOfficerRepository repository;
-
-    private final long id = 1L;
+    private val repository: LoanOfficerRepository? = null
+    private val id = 1L
 
     @Test
-    public void testFindAll() {
-
-        List<LoanOfficer> los = repository.findAll();
-
-        assertNotNull(los);
-
-        for (LoanOfficer loanOfficer : los) {
-            System.out.println("loanOfficer = " + loanOfficer);
+    fun testFindAll() {
+        val los = repository!!.findAll()
+        Assert.assertNotNull(los)
+        for (loanOfficer in los) {
+            println("loanOfficer = $loanOfficer")
         }
     }
 
     @Test
-    public void testFindById() {
-
-        Optional<LoanOfficer> entity = repository.findById(id);
-
-        assertTrue(entity.isPresent());
-
-        LoanOfficer loanOfficer = entity.get();
-
-        assertEquals(id, loanOfficer.getLoanOfficerId());
-        assertEquals("Friendly", loanOfficer.getFirstName());
-        assertEquals("Officer", loanOfficer.getLastName());
-        assertEquals("3035557777", loanOfficer.getPhone());
-        assertEquals("puppies@gmail.com", loanOfficer.getEmail());
-        assertEquals(12345, loanOfficer.getManagerId());
+    fun testFindById() {
+        val entity = repository!!.findById(id)
+        Assert.assertTrue(entity.isPresent)
+        val (loanOfficerId, firstName, lastName, phone, email, managerId) = entity.get()
+        Assert.assertEquals(id, loanOfficerId)
+        Assert.assertEquals("Friendly", firstName)
+        Assert.assertEquals("Officer", lastName)
+        Assert.assertEquals("3035557777", phone)
+        Assert.assertEquals("puppies@gmail.com", email)
+        Assert.assertEquals(12345, managerId)
     }
 
     @Test
-    public void testExistsById() {
-
-        assertTrue(repository.existsById(id));
-        assertFalse(repository.existsById(1234L));
+    fun testExistsById() {
+        Assert.assertTrue(repository!!.existsById(id))
+        Assert.assertFalse(repository.existsById(1234L))
     }
 
     @Test
-    public void testCount() {
-
-        assertEquals(2, repository.count());
+    fun testCount() {
+        Assert.assertEquals(2, repository!!.count())
     }
-
 }
