@@ -48,7 +48,7 @@ class MortgageLoanServiceImpl : MortgageLoanService {
     override fun updateStatus(mortgageId: Long): MortgageLoanStatus {
         val kieSession = kContainer.newKieSession()
         val loan: MortgageLoan = findByMortgageId(mortgageId)
-        val customer: Customer = customerService.getCustomerById(loan.customerId).get()
+        val customer = customerService.getCustomerById(loan.customerId).get()
         val loanOfficerId = loan.loanOfficerId
 
         if (loanOfficerId != null) {

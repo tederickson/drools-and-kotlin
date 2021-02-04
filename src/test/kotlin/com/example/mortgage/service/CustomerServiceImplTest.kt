@@ -1,5 +1,6 @@
 package com.example.mortgage.service
 
+import com.example.mortgage.digest.CustomerDigest
 import com.example.mortgage.model.Customer
 import com.example.mortgage.repository.CustomerRepository
 import org.junit.Assert
@@ -42,13 +43,13 @@ class CustomerServiceImplTest {
         Assert.assertEquals(id, customerId)
         Assert.assertEquals("Almost", firstName)
         Assert.assertEquals("There", lastName)
-        Assert.assertNull(phone)
-        Assert.assertNull(email)
+        Assert.assertEquals("", phone)
+        Assert.assertEquals("", email)
     }
 
     @Test
     fun testFindAll() {
-        val customers: List<Customer?> = service.getCustomers()
+        val customers: List<CustomerDigest> = service.getCustomers()
         Assert.assertEquals(4, customers.size.toLong())
         for (customer in customers) {
             println("customer = $customer")
@@ -57,7 +58,7 @@ class CustomerServiceImplTest {
 
     @Test
     fun testUpdateCustomer() {
-        val customer = Customer(
+        val customer = CustomerDigest(
                 customerId = id,
                 firstName = "Yogi",
                 lastName = "Bear",
@@ -68,13 +69,21 @@ class CustomerServiceImplTest {
         Assert.assertEquals(customer, serviceResult)
         val entity = repository.findById(id)
         Assert.assertTrue(entity.isPresent)
-        Assert.assertEquals(customer, entity.get())
+        assertEquals(customer, entity.get())
+    }
+
+    private fun assertEquals(customerDigest: CustomerDigest, customer: Customer) {
+        Assert.assertEquals(customerDigest.customerId, customer.customerId)
+        Assert.assertEquals(customerDigest.firstName, customer.firstName)
+        Assert.assertEquals(customerDigest.lastName, customer.lastName)
+        Assert.assertEquals(customerDigest.phone, customer.phone)
+        Assert.assertEquals(customerDigest.email, customer.email)
     }
 
     @Test
     fun testUpdateCustomer_invalidId() {
         val invalidId: Long = 9999
-        val customer = Customer(
+        val customer = CustomerDigest(
                 customerId = invalidId,
                 firstName = "Yogi",
                 lastName = "Bear",
@@ -89,14 +98,17 @@ class CustomerServiceImplTest {
 
     @Test
     fun testAddAndDeleteCustomer() {
-        val customer = Customer(firstName = "Teen", lastName = "Titans", phone = "8005557777")
+        val customer = CustomerDigest(firstName = "Teen", lastName = "Titans", phone = "8005557777",
+                customerId = 999, email = "")
         val expectedCount = repository.count() + 1
-        val entity = service.addCustomer(customer)
+        val customerDigest = service.addCustomer(customer)
+
         Assert.assertEquals(expectedCount, repository.count())
-        customer.customerId = entity.customerId
-        Assert.assertEquals(customer, entity)
-        service.deleteCustomer(entity.customerId)
+
+        customer.customerId = customerDigest.customerId
+        Assert.assertEquals(customer, customerDigest)
+        service.deleteCustomer(customerDigest.customerId)
         Assert.assertEquals(expectedCount - 1, repository.count())
-        Assert.assertFalse(service.getCustomerById(entity.customerId).isPresent)
+        Assert.assertFalse(service.getCustomerById(customerDigest.customerId).isPresent)
     }
 }

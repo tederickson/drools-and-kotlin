@@ -1,6 +1,7 @@
 package MortgageRule
 
 import com.example.mortgage.model.*;
+import com.example.mortgage.digest.*;
 import java.util.*;
 
 dialect "java"
@@ -13,6 +14,13 @@ rule "Print loan"
     System.out.println("Print loan = " + anObject);
 end
 
+rule "Print MortgageLoanDigest"
+  when
+    anObject: MortgageLoanDigest()
+  then
+    System.out.println("Print MortgageLoanDigest = " + anObject);
+end
+
 rule "Print LoanOfficer"
   when
     anObject: LoanOfficer()
@@ -20,11 +28,25 @@ rule "Print LoanOfficer"
     System.out.println("Print LoanOfficer = " + anObject);
 end
 
+rule "Print LoanOfficerDigest"
+  when
+    anObject: LoanOfficerDigest()
+  then
+    System.out.println("Print LoanOfficerDigest = " + anObject);
+end
+
 rule "Print Customer"
   when
     anObject: Customer()
   then
     System.out.println("Print Customer = " + anObject);
+end
+
+rule "Print CustomerDigest"
+  when
+    anObject: CustomerDigest()
+  then
+    System.out.println("Print CustomerDigest = " + anObject);
 end
 
 // -- Validation --
@@ -37,35 +59,35 @@ rule "Invalid Loan Officer"
     insert(MortgageLoanStatus.LOAN_OFFICER_INCOMPLETE);
 end
 
-rule "Customer missing first name"
+rule "CustomerDigest missing first name"
   when
-    $c : Customer(firstName == null || firstName.trim().isEmpty())
+    $c : CustomerDigest(firstName == null || firstName.trim().isEmpty())
   then
-    System.out.println("Customer missing first name");
+    System.out.println("CustomerDigest missing first name");
     insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
 end
 
-rule "Customer missing last name"
+rule "CustomerDigest missing last name"
   when
-    $c : Customer(lastName == null || lastName.trim().isEmpty())
+    $c : CustomerDigest(lastName == null || lastName.trim().isEmpty())
   then
-    System.out.println("Customer missing last name");
+    System.out.println("CustomerDigest missing last name");
     insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
 end
 
-rule "Customer missing phone"
+rule "CustomerDigest missing phone"
   when
-    $c : Customer(phone == null || phone.trim().isEmpty())
+    $c : CustomerDigest(phone == null || phone.trim().isEmpty())
   then
-    System.out.println("Customer missing phone");
+    System.out.println("CustomerDigest missing phone");
     insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
 end
 
-rule "Customer missing email"
+rule "CustomerDigest missing email"
   when
-    $c : Customer(email == null || email.trim().isEmpty())
+    $c : CustomerDigest(email == null || email.trim().isEmpty())
   then
-    System.out.println("Customer missing email");
+    System.out.println("CustomerDigest missing email");
     insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
 end
 
