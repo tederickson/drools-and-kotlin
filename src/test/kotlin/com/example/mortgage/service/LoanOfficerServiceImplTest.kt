@@ -44,9 +44,7 @@ class LoanOfficerServiceImplTest {
     fun testFindAll() {
         val loanOfficers: List<LoanOfficer?> = service.getLoanOfficers()
         Assert.assertEquals(2, loanOfficers.size.toLong())
-        for (loanOfficer in loanOfficers) {
-            println("loanOfficer = {loanOfficer}")
-        }
+        Assert.assertEquals(2, repository.count())
     }
 
     @Test

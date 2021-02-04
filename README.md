@@ -32,13 +32,16 @@ rule "Customer missing phone"
     insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
 end
 ```
-The when portion checks to see if:
+The *when* portion checks to see if:
 1. A Customer fact exists
 1. The Customer.phone is null or an empty String
 
-The then is Java code that inserts a new fact MortgageLoanStatus.USER_INFO_INCOMPLETE.
+The *then* is Java code that inserts a new fact MortgageLoanStatus.USER_INFO_INCOMPLETE.
 
 Inserting a new fact causes additional business rules to fire.
+
+## Testing
+`mvn clean test` runs all unit tests.
 
 ## Enhancements
 * Add Rest Controllers

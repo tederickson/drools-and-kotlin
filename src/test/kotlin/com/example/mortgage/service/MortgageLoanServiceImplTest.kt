@@ -90,26 +90,47 @@ class MortgageLoanServiceImplTest {
 
     @Test
     fun testAddLoanOfficer() {
-        val customerOptional = customerRepository.findById(3L)
+        val assignedLoanOfficer = 1L
+        val customerId = 3L
+        val customerOptional = customerRepository.findById(customerId)
         Assert.assertTrue(customerOptional.isPresent)
         val customer = customerOptional.get()
         val (mortgageId) = service.addMortgageLoan(customer)
-        service.addLoanOfficer(mortgageId, 1L)
-        val (mortgageId1, customerId, loanOfficerId) = mortgageLoanRepository.getOne(mortgageId)
-        Assert.assertEquals(mortgageId, mortgageId1)
-        Assert.assertEquals(customerId, customer.customerId)
-        Assert.assertNotNull(loanOfficerId)
-        Assert.assertEquals(1L, loanOfficerId!!.toLong())
+        service.addLoanOfficer(mortgageId, assignedLoanOfficer)
+
+        // Verify loan is persisted
+        verifyPersistedLoan(mortgageId, customer.customerId, assignedLoanOfficer, MortgageLoanStatus.STARTED)
+    }
+
+    private fun verifyPersistedLoan(mortgageId: Long, customerId: Long, loanOfficerId: Long, status: MortgageLoanStatus) {
+        val loan = mortgageLoanRepository.getOne(mortgageId)
+
+        Assert.assertEquals(mortgageId, loan.mortgageId)
+        Assert.assertEquals(customerId, loan.customerId)
+        Assert.assertEquals(loanOfficerId, loan.loanOfficerId)
+        Assert.assertEquals(status, loan.statusEnum)
+    }
+
+    private fun verifyPersistedLoan(mortgageId: Long, customerId: Long, status: MortgageLoanStatus) {
+        val loan = mortgageLoanRepository.getOne(mortgageId)
+
+        Assert.assertEquals(mortgageId, loan.mortgageId)
+        Assert.assertEquals(customerId, loan.customerId)
+        Assert.assertNull(loan.loanOfficerId)
+        Assert.assertEquals(status, loan.statusEnum)
     }
 
     @Test
     fun testGetNewLoanStatus() {
-        val customer = customerRepository.findById(3L)
+        val customerId = 3L
+        val customer = customerRepository.findById(customerId)
         Assert.assertTrue(customer.isPresent)
         val mortgageLoan = service.addMortgageLoan(customer.get())
         Assert.assertNotNull(mortgageLoan)
         val mortgageLoanStatus = service.updateStatus(mortgageLoan.mortgageId)
         Assert.assertEquals(MortgageLoanStatus.LOAN_OFFICER_INCOMPLETE, mortgageLoanStatus)
+
+        verifyPersistedLoan(mortgageLoan.mortgageId, customerId, MortgageLoanStatus.LOAN_OFFICER_INCOMPLETE)
     }
 
     @Test
