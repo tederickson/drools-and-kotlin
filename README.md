@@ -40,15 +40,6 @@ The then is Java code that inserts a new fact MortgageLoanStatus.USER_INFO_INCOM
 
 Inserting a new fact causes additional business rules to fire.
 
-## Issues
-`mvn clean test` does not run the tests.  Spent hours researching but still have not found a solution.
-
-Using "Apache Maven 3.6.3".  Tried many different pom configurations.
-
-IntelliJ runs single tests and also runs all tests in src/test/kotlin/com/example/mortgage.
-
-Going to stick with running Kotlin tests through IntelliJ and researching as time permits.
-
 ## Enhancements
 * Add Rest Controllers
 * Add Documents to the database and expand the business rules to provide a workflow based on which documents have been completed.
