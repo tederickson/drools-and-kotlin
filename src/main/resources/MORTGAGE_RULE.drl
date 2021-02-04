@@ -53,7 +53,7 @@ end
 
 rule "Invalid Loan Officer"
   when
-    not LoanOfficer()
+    not LoanOfficerDigest()
   then
     System.out.println("Invalid Loan Officer");
     insert(MortgageLoanStatus.LOAN_OFFICER_INCOMPLETE);

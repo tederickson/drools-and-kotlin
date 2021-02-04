@@ -1,6 +1,9 @@
 package com.example.mortgage.service
 
+import com.example.mortgage.digest.CustomerDigest
+import com.example.mortgage.digest.MortgageLoanStatusEnum
 import com.example.mortgage.model.Customer
+import com.example.mortgage.model.MortgageLoan
 import com.example.mortgage.model.MortgageLoanStatus
 import com.example.mortgage.repository.CustomerRepository
 import com.example.mortgage.repository.MortgageLoanRepository
@@ -33,15 +36,38 @@ class MortgageLoanServiceImplTest {
                 mortgageLoanRepository.delete(loan)
             }
         }
+
+        //  INSERT INTO Mortgage_Loan(customer_id, loan_officer_id, status_enum) VALUES (2, 1, 'APPROVED');
+        val loan: MortgageLoan = MortgageLoan(customerId = 2,
+                loanOfficerId = 1,
+                statusEnum = MortgageLoanStatus.APPROVED,
+                mortgageId = 1)
+        mortgageLoanRepository.saveAndFlush(loan)
     }
 
     @Test
     fun addMortgageLoan() {
         val customer = customerRepository.findById(3L)
         Assert.assertTrue(customer.isPresent)
-        val mortgageLoan = service.addMortgageLoan(customer.get())
+
+        val digest = customerDigestTransform(customer.get())
+        val mortgageLoan = service.addMortgageLoan(digest)
         Assert.assertNotNull(mortgageLoan)
-        Assert.assertEquals(MortgageLoanStatus.STARTED, mortgageLoan.statusEnum)
+        Assert.assertEquals(MortgageLoanStatusEnum.STARTED, mortgageLoan.statusEnum)
+    }
+
+    fun customerDigestTransform(customer: Customer): CustomerDigest {
+        val customerId: Long = customer.customerId
+        val firstName: String = customer.firstName
+        val lastName: String = customer.lastName
+        val phone: String = customer.phone ?: ""
+        val email: String = customer.email ?: ""
+
+        return CustomerDigest(customerId = customerId,
+                firstName = firstName,
+                lastName = lastName,
+                phone = phone,
+                email = email)
     }
 
     @Test
@@ -74,7 +100,7 @@ class MortgageLoanServiceImplTest {
     fun testFindByMortgageIdId() {
         val loan = service.findByMortgageId(1)
         Assert.assertNotNull(loan)
-        Assert.assertEquals(MortgageLoanStatus.APPROVED, loan.statusEnum)
+        Assert.assertEquals(MortgageLoanStatusEnum.APPROVED, loan.statusEnum)
     }
 
     @Test(expected = DataAccessException::class)
@@ -85,7 +111,7 @@ class MortgageLoanServiceImplTest {
     @Test
     fun testUpdateStatus() {
         val mortgageLoanStatus = service.updateStatus(1)
-        Assert.assertEquals(MortgageLoanStatus.APPROVED, mortgageLoanStatus)
+        Assert.assertEquals(MortgageLoanStatusEnum.APPROVED, mortgageLoanStatus)
     }
 
     @Test
@@ -95,7 +121,7 @@ class MortgageLoanServiceImplTest {
         val customerOptional = customerRepository.findById(customerId)
         Assert.assertTrue(customerOptional.isPresent)
         val customer = customerOptional.get()
-        val (mortgageId) = service.addMortgageLoan(customer)
+        val (mortgageId) = service.addMortgageLoan(customerDigestTransform(customer))
         service.addLoanOfficer(mortgageId, assignedLoanOfficer)
 
         // Verify loan is persisted
@@ -125,10 +151,10 @@ class MortgageLoanServiceImplTest {
         val customerId = 3L
         val customer = customerRepository.findById(customerId)
         Assert.assertTrue(customer.isPresent)
-        val mortgageLoan = service.addMortgageLoan(customer.get())
+        val mortgageLoan = service.addMortgageLoan(customerDigestTransform(customer.get()))
         Assert.assertNotNull(mortgageLoan)
         val mortgageLoanStatus = service.updateStatus(mortgageLoan.mortgageId)
-        Assert.assertEquals(MortgageLoanStatus.LOAN_OFFICER_INCOMPLETE, mortgageLoanStatus)
+        Assert.assertEquals(MortgageLoanStatusEnum.LOAN_OFFICER_INCOMPLETE, mortgageLoanStatus)
 
         verifyPersistedLoan(mortgageLoan.mortgageId, customerId, MortgageLoanStatus.LOAN_OFFICER_INCOMPLETE)
     }
@@ -141,17 +167,17 @@ class MortgageLoanServiceImplTest {
                 email = "main.bear@jellystone.gov")
 
         val entity = customerRepository.save(customer)
-        val (mortgageId) = service.addMortgageLoan(entity, 1)
+        val (mortgageId) = service.addMortgageLoan(customerDigestTransform(entity), 1)
         val mortgageLoanStatus = service.updateStatus(mortgageId)
-        Assert.assertEquals(MortgageLoanStatus.USER_INFO_INCOMPLETE, mortgageLoanStatus)
+        Assert.assertEquals(MortgageLoanStatusEnum.USER_INFO_INCOMPLETE, mortgageLoanStatus)
     }
 
     @Test
     fun testUpdateStatus_missingEmail() {
         val customer = Customer(firstName = "Yogi", lastName = "Bear missing email", phone = "8005550001")
         val entity = customerRepository.save(customer)
-        val (mortgageId) = service.addMortgageLoan(entity, 1)
+        val (mortgageId) = service.addMortgageLoan(customerDigestTransform(entity), 1)
         val mortgageLoanStatus = service.updateStatus(mortgageId)
-        Assert.assertEquals(MortgageLoanStatus.USER_INFO_INCOMPLETE, mortgageLoanStatus)
+        Assert.assertEquals(MortgageLoanStatusEnum.USER_INFO_INCOMPLETE, mortgageLoanStatus)
     }
 }
