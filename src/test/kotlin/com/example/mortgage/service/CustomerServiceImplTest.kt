@@ -3,6 +3,7 @@ package com.example.mortgage.service
 import com.example.mortgage.model.Customer
 import com.example.mortgage.repository.CustomerRepository
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,6 +20,19 @@ class CustomerServiceImplTest {
     lateinit var service: CustomerService
 
     private val id = 4L
+
+    @Before
+    fun initialize() {
+        val customers = repository.findAll()
+        for (customer in customers) {
+            if (customer != null) {
+                if (customer.customerId > 4L) {
+                    println("*** Deleting customer = ${customer}")
+                    repository.delete(customer)
+                }
+            }
+        }
+    }
 
     @Test
     fun testFindById() {

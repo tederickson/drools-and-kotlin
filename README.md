@@ -15,3 +15,8 @@ The configuration is in src/main/kotlin/com/example/mortgage/config/DroolsConfig
 
 The business rules are invoked by src/main/kotlin/com/example/mortgage/service/MortgageLoanServiceImpl.kt
 
+## Issues
+`mvn clean test` does not run the tests.  Spent hours researching but still have not found a solution.
+
+IntelliJ runs single tests and also runs all tests in src/test/kotlin/com/example/mortgage.
+
