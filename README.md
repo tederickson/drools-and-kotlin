@@ -24,6 +24,22 @@ The configuration is in src/main/kotlin/com/example/mortgage/config/DroolsConfig
 
 The business rules are invoked by src/main/kotlin/com/example/mortgage/service/MortgageLoanServiceImpl.kt
 
+```
+rule "Customer missing phone"
+  when
+    $c : Customer(phone == null || phone.trim().isEmpty())
+  then
+    insert(MortgageLoanStatus.USER_INFO_INCOMPLETE);
+end
+```
+The when portion checks to see if:
+1. A Customer fact exists
+1. The Customer.phone is null or an empty String
+
+The then is Java code that inserts a new fact MortgageLoanStatus.USER_INFO_INCOMPLETE.
+
+Inserting a new fact causes additional business rules to fire.
+
 ## Issues
 `mvn clean test` does not run the tests.  Spent hours researching but still have not found a solution.
 
