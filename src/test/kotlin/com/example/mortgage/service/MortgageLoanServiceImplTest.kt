@@ -1,7 +1,6 @@
 package com.example.mortgage.service
 
 import com.example.mortgage.model.Customer
-import com.example.mortgage.model.MortgageLoan
 import com.example.mortgage.model.MortgageLoanStatus
 import com.example.mortgage.repository.CustomerRepository
 import com.example.mortgage.repository.MortgageLoanRepository
@@ -91,12 +90,14 @@ class MortgageLoanServiceImplTest {
 
     @Test
     fun testAddLoanOfficer() {
-        val customer = customerRepository.findById(3L)
-        Assert.assertTrue(customer.isPresent)
-        val (mortgageId) = service.addMortgageLoan(customer.get())
-        service.addLoanOfficer(mortgageId, 1)
-        val (mortgageId1, _, loanOfficerId) = mortgageLoanRepository.getOne(mortgageId)
+        val customerOptional = customerRepository.findById(3L)
+        Assert.assertTrue(customerOptional.isPresent)
+        val customer = customerOptional.get()
+        val (mortgageId) = service.addMortgageLoan(customer)
+        service.addLoanOfficer(mortgageId, 1L)
+        val (mortgageId1, customerId, loanOfficerId) = mortgageLoanRepository.getOne(mortgageId)
         Assert.assertEquals(mortgageId, mortgageId1)
+        Assert.assertEquals(customerId, customer.customerId)
         Assert.assertNotNull(loanOfficerId)
         Assert.assertEquals(1L, loanOfficerId!!.toLong())
     }
@@ -115,7 +116,7 @@ class MortgageLoanServiceImplTest {
     fun testUpdateStatus_missingPhone() {
         val customer = Customer(
                 firstName = "Yogi",
-                lastName = "Bear",
+                lastName = "Bear missing phone",
                 email = "main.bear@jellystone.gov")
 
         val entity = customerRepository.save(customer)
@@ -126,7 +127,7 @@ class MortgageLoanServiceImplTest {
 
     @Test
     fun testUpdateStatus_missingEmail() {
-        val customer = Customer(firstName = "Yogi", lastName = "Bear", phone = "8005550001")
+        val customer = Customer(firstName = "Yogi", lastName = "Bear missing email", phone = "8005550001")
         val entity = customerRepository.save(customer)
         val (mortgageId) = service.addMortgageLoan(entity, 1)
         val mortgageLoanStatus = service.updateStatus(mortgageId)
