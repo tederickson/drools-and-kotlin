@@ -5,7 +5,7 @@ import java.util.*
 
 interface CustomerService {
 
-    fun addCustomer(customer: CustomerDigest): CustomerDigest
+    fun addCustomer(customerDigest: CustomerDigest): CustomerDigest
     fun deleteCustomer(id: Long)
     fun getCustomerById(id: Long): Optional<CustomerDigest>
     fun getCustomers(): MutableList<CustomerDigest>
