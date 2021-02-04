@@ -24,7 +24,7 @@ class LoanOfficerServiceImplTest {
 
     @Before
     fun resetLoanOfficer() {
-        val original = LoanOfficer(id, "Friendly", "Officer", "3035557777", "puppies@gmail.com", 12345, "ACTIVE")
+        val original = LoanOfficer(id, "Friendly", "Officer", "3035557777", "puppies@gmail.com", 12345, LoanOfficerActive.ACTIVE)
         repository.saveAndFlush(original)
     }
 
@@ -55,7 +55,7 @@ class LoanOfficerServiceImplTest {
         loanOfficer.loanOfficerId = id
         loanOfficer.firstName = "Silly"
         loanOfficer.lastName = "Name"
-        loanOfficer.activeEnum = LoanOfficerActive.VACATION.toString()
+        loanOfficer.activeEnum = LoanOfficerActive.VACATION
         loanOfficer.email = ""
         loanOfficer.phone = ""
         loanOfficer.managerId = -1
@@ -79,7 +79,7 @@ class LoanOfficerServiceImplTest {
 
     @Test
     fun testAddLoanOfficer() {
-        val loanOfficer = LoanOfficer(-1, "Apple", "Pie", "8005557777", "nope", 2134, LoanOfficerActive.ACTIVE.toString())
+        val loanOfficer = LoanOfficer(-1, "Apple", "Pie", "8005557777", "nope", 2134, LoanOfficerActive.ACTIVE)
         val expectedCount = repository.count() + 1
         val entity = service.addLoanOfficer(loanOfficer)
         Assert.assertEquals(expectedCount, repository.count())

@@ -1,9 +1,6 @@
 package com.example.mortgage.model
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class LoanOfficer(
@@ -14,5 +11,8 @@ data class LoanOfficer(
         var phone: String = "",
         var email: String = "",
         var managerId: Long = -1,
-        var activeEnum: String = LoanOfficerActive.INVALID.toString()
+
+        // To map the Enum to a String database column type, you need to specify the EnumType.STRING
+        @Enumerated(EnumType.STRING)
+        var activeEnum: LoanOfficerActive = LoanOfficerActive.INVALID
 )

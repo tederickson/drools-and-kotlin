@@ -75,5 +75,6 @@ rule "Set MortgageLoanStatus"
     $status: MortgageLoanStatus()
     $loan: MortgageLoan()
   then
-    $loan.setStatusEnum($status.toString());
+    System.out.println("Set MortgageLoanStatus " + $status);
+    $loan.setStatusEnum($status);
 end

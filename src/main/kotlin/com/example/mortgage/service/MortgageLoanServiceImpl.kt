@@ -63,6 +63,6 @@ class MortgageLoanServiceImpl : MortgageLoanService {
 
         repository.save(loan)
 
-        return MortgageLoanStatus.valueOf(loan.statusEnum)
+        return loan.statusEnum
     }
 }

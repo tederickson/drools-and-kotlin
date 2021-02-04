@@ -42,12 +42,7 @@ class MortgageLoanServiceImplTest {
         Assert.assertTrue(customer.isPresent)
         val mortgageLoan = service.addMortgageLoan(customer.get())
         Assert.assertNotNull(mortgageLoan)
-        validate(MortgageLoanStatus.STARTED, mortgageLoan)
-    }
-
-    private fun validate(mortgageLoanStatus: MortgageLoanStatus, mortgageLoan: MortgageLoan) {
-        val actual = MortgageLoanStatus.valueOf(mortgageLoan.statusEnum)
-        Assert.assertEquals(mortgageLoanStatus, actual)
+        Assert.assertEquals(MortgageLoanStatus.STARTED, mortgageLoan.statusEnum)
     }
 
     @Test
@@ -80,7 +75,7 @@ class MortgageLoanServiceImplTest {
     fun testFindByMortgageIdId() {
         val loan = service.findByMortgageId(1)
         Assert.assertNotNull(loan)
-        validate(MortgageLoanStatus.APPROVED, loan)
+        Assert.assertEquals(MortgageLoanStatus.APPROVED, loan.statusEnum)
     }
 
     @Test(expected = DataAccessException::class)

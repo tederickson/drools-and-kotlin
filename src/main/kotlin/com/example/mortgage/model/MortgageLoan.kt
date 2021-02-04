@@ -1,9 +1,6 @@
 package com.example.mortgage.model
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class MortgageLoan(
@@ -11,5 +8,7 @@ data class MortgageLoan(
         var mortgageId: Long = -1,
         var customerId: Long = -1,
         var loanOfficerId: Long? = null,
-        var statusEnum: String = MortgageLoanStatus.STARTED.toString()
+
+        @Enumerated(EnumType.STRING)
+        var statusEnum: MortgageLoanStatus = MortgageLoanStatus.STARTED
 )
