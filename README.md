@@ -27,9 +27,11 @@ The business rules are invoked by src/main/kotlin/com/example/mortgage/service/M
 ## Issues
 `mvn clean test` does not run the tests.  Spent hours researching but still have not found a solution.
 
-Using "Apache Maven 3.6.3".  Tried 
+Using "Apache Maven 3.6.3".  Tried many different pom configurations.
 
 IntelliJ runs single tests and also runs all tests in src/test/kotlin/com/example/mortgage.
+
+Going to stick with running Kotlin tests through IntelliJ and researching as time permits.
 
 ## Enhancements
 * Add Rest Controllers
