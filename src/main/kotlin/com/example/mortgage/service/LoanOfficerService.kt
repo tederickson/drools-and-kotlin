@@ -1,7 +1,6 @@
 package com.example.mortgage.service
 
 import com.example.mortgage.digest.LoanOfficerDigest
-import com.example.mortgage.model.LoanOfficer
 
 interface LoanOfficerService {
 
