@@ -38,10 +38,12 @@ class MortgageLoanServiceImplTest {
         }
 
         //  INSERT INTO Mortgage_Loan(customer_id, loan_officer_id, status_enum) VALUES (2, 1, 'APPROVED');
-        val loan: MortgageLoan = MortgageLoan(customerId = 2,
-                loanOfficerId = 1,
-                statusEnum = MortgageLoanStatus.APPROVED,
-                mortgageId = 1)
+        val loan = MortgageLoan(
+            customerId = 2,
+            loanOfficerId = 1,
+            statusEnum = MortgageLoanStatus.APPROVED,
+            mortgageId = 1
+        )
         mortgageLoanRepository.saveAndFlush(loan)
     }
 
@@ -63,11 +65,13 @@ class MortgageLoanServiceImplTest {
         val phone: String = customer.phone ?: ""
         val email: String = customer.email ?: ""
 
-        return CustomerDigest(customerId = customerId,
-                firstName = firstName,
-                lastName = lastName,
-                phone = phone,
-                email = email)
+        return CustomerDigest(
+            customerId = customerId,
+            firstName = firstName,
+            lastName = lastName,
+            phone = phone,
+            email = email
+        )
     }
 
     @Test
@@ -128,7 +132,12 @@ class MortgageLoanServiceImplTest {
         verifyPersistedLoan(mortgageId, customer.customerId, assignedLoanOfficer, MortgageLoanStatus.STARTED)
     }
 
-    private fun verifyPersistedLoan(mortgageId: Long, customerId: Long, loanOfficerId: Long, status: MortgageLoanStatus) {
+    private fun verifyPersistedLoan(
+        mortgageId: Long,
+        customerId: Long,
+        loanOfficerId: Long,
+        status: MortgageLoanStatus
+    ) {
         val loan = mortgageLoanRepository.getOne(mortgageId)
 
         Assert.assertEquals(mortgageId, loan.mortgageId)
@@ -162,9 +171,10 @@ class MortgageLoanServiceImplTest {
     @Test
     fun testUpdateStatus_missingPhone() {
         val customer = Customer(
-                firstName = "Yogi",
-                lastName = "Bear missing phone",
-                email = "main.bear@jellystone.gov")
+            firstName = "Yogi",
+            lastName = "Bear missing phone",
+            email = "main.bear@jellystone.gov"
+        )
 
         val entity = customerRepository.save(customer)
         val (mortgageId) = service.addMortgageLoan(customerDigestTransform(entity), 1)

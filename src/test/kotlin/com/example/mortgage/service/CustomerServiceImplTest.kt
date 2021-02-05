@@ -28,7 +28,7 @@ class CustomerServiceImplTest {
         for (customer in customers) {
             if (customer != null) {
                 if (customer.customerId > 4L) {
-                    println("*** Deleting customer = ${customer}")
+                    println("*** Deleting customer = $customer")
                     repository.delete(customer)
                 }
             }
@@ -59,11 +59,12 @@ class CustomerServiceImplTest {
     @Test
     fun testUpdateCustomer() {
         val customer = CustomerDigest(
-                customerId = id,
-                firstName = "Yogi",
-                lastName = "Bear",
-                phone = "8005550001",
-                email = "main.bear@jellystone.gov")
+            customerId = id,
+            firstName = "Yogi",
+            lastName = "Bear",
+            phone = "8005550001",
+            email = "main.bear@jellystone.gov"
+        )
 
         val serviceResult = service.updateCustomer(customer)
         Assert.assertEquals(customer, serviceResult)
@@ -84,11 +85,12 @@ class CustomerServiceImplTest {
     fun testUpdateCustomer_invalidId() {
         val invalidId: Long = 9999
         val customer = CustomerDigest(
-                customerId = invalidId,
-                firstName = "Yogi",
-                lastName = "Bear",
-                phone = "8005550001",
-                email = "main.bear@jellystone.gov")
+            customerId = invalidId,
+            firstName = "Yogi",
+            lastName = "Bear",
+            phone = "8005550001",
+            email = "main.bear@jellystone.gov"
+        )
 
         val serviceResult = service.updateCustomer(customer)
         Assert.assertNull(serviceResult)
@@ -98,8 +100,10 @@ class CustomerServiceImplTest {
 
     @Test
     fun testAddAndDeleteCustomer() {
-        val customer = CustomerDigest(firstName = "Teen", lastName = "Titans", phone = "8005557777",
-                customerId = 999, email = "")
+        val customer = CustomerDigest(
+            firstName = "Teen", lastName = "Titans", phone = "8005557777",
+            customerId = 999, email = ""
+        )
         val expectedCount = repository.count() + 1
         val customerDigest = service.addCustomer(customer)
 
