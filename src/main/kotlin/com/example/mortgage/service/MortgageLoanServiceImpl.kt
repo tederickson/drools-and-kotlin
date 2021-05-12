@@ -4,8 +4,9 @@ import com.example.mortgage.digest.CustomerDigest
 import com.example.mortgage.digest.MortgageLoanDigest
 import com.example.mortgage.digest.MortgageLoanStatusEnum
 import com.example.mortgage.model.MortgageLoan
-import com.example.mortgage.model.MortgageLoanStatus
 import com.example.mortgage.repository.MortgageLoanRepository
+import com.example.mortgage.transform.MortgageLoanDigestTransform
+import com.example.mortgage.transform.MortgageLoanStatusEnumTransform
 import org.kie.api.runtime.KieContainer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -27,14 +28,16 @@ class MortgageLoanServiceImpl : MortgageLoanService {
     @Autowired
     lateinit var kContainer: KieContainer
 
+    val mortgageLoanDigestTransform: MortgageLoanDigestTransform = MortgageLoanDigestTransform()
+
     override fun addMortgageLoan(customer: CustomerDigest): MortgageLoanDigest {
         val mortgageLoan = MortgageLoan(customerId = customer.customerId)
-        return mortgageLoanDigestTransform(repository.saveAndFlush(mortgageLoan))
+        return mortgageLoanDigestTransform.build(repository.saveAndFlush(mortgageLoan))
     }
 
     override fun addMortgageLoan(customer: CustomerDigest, loanOfficerId: Long): MortgageLoanDigest {
         val mortgageLoan = MortgageLoan(customerId = customer.customerId, loanOfficerId = loanOfficerId)
-        return mortgageLoanDigestTransform(repository.saveAndFlush(mortgageLoan))
+        return mortgageLoanDigestTransform.build(repository.saveAndFlush(mortgageLoan))
     }
 
     override fun addLoanOfficer(mortgageId: Long, loanOfficerId: Long) {
@@ -45,21 +48,21 @@ class MortgageLoanServiceImpl : MortgageLoanService {
     }
 
     override fun findByMortgageId(mortgageId: Long): MortgageLoanDigest {
-        return mortgageLoanDigestTransform(repository.getOne(mortgageId))
+        return mortgageLoanDigestTransform.build(repository.getOne(mortgageId))
     }
 
     override fun findByCustomerId(customerId: Long): List<MortgageLoanDigest> {
         return repository.findByCustomerId(customerId)
             .stream()
             .filter(Objects::nonNull)
-            .map { item -> mortgageLoanDigestTransform(item!!) }
+            .map { item -> mortgageLoanDigestTransform.build(item!!) }
             .collect(Collectors.toList())
     }
 
     override fun findByLoanOfficerId(loanOfficerId: Long): List<MortgageLoanDigest> {
         return repository.findByLoanOfficerId(loanOfficerId).stream()
             .filter(Objects::nonNull)
-            .map { item -> mortgageLoanDigestTransform(item!!) }
+            .map { item -> mortgageLoanDigestTransform.build(item!!) }
             .collect(Collectors.toList())
     }
 
@@ -81,23 +84,9 @@ class MortgageLoanServiceImpl : MortgageLoanService {
 
         repository.save(loan)
 
-        return mortgageLoanStatusEnumTransform(loan.statusEnum)
-    }
+        val transform = MortgageLoanStatusEnumTransform()
 
-    fun mortgageLoanStatusEnumTransform(statusEnum: MortgageLoanStatus): MortgageLoanStatusEnum {
-        return MortgageLoanStatusEnum.valueOf(statusEnum.toString())
-    }
-
-    fun mortgageLoanDigestTransform(mortgageLoan: MortgageLoan): MortgageLoanDigest {
-        val statusEnum: MortgageLoanStatusEnum = mortgageLoanStatusEnumTransform(mortgageLoan.statusEnum)
-        val loanOfficerId = mortgageLoan.loanOfficerId ?: -1
-
-        return MortgageLoanDigest(
-            mortgageId = mortgageLoan.mortgageId,
-            customerId = mortgageLoan.customerId,
-            loanOfficerId = loanOfficerId,
-            statusEnum = statusEnum
-        )
+        return transform.build(loan.statusEnum)
     }
 
 }
