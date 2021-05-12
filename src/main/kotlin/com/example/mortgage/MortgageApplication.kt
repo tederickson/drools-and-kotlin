@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class MortgageApplication
 
 fun main(args: Array<String>) {
-	runApplication<MortgageApplication>(*args)
+    runApplication<MortgageApplication>(*args)
 }

@@ -14,13 +14,15 @@ import springfox.documentation.spring.web.plugins.Docket
 class SwaggerConfig {
     @Bean
     fun productApi(): Docket? {
-        return Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("com.example.mortgage.rest"))
-                .paths(PathSelectors.any()).build().apiInfo(metaData())
+        return Docket(DocumentationType.SWAGGER_2).select()
+            .apis(RequestHandlerSelectors.basePackage("com.example.mortgage.rest"))
+            .paths(PathSelectors.any()).build().apiInfo(metaData())
     }
 
     private fun metaData(): ApiInfo? {
-        return ApiInfoBuilder().title("Contact List REST API").description("Spring Boot REST API for Mortgage Application").version("1.1.0")
-                .license("Apache License Version 2.0").licenseUrl("https://www.apache.org/licenses/LICENSE-2.0\"").build()
+        return ApiInfoBuilder().title("Contact List REST API")
+            .description("Spring Boot REST API for Mortgage Application").version("1.1.0")
+            .license("Apache License Version 2.0").licenseUrl("https://www.apache.org/licenses/LICENSE-2.0\"").build()
     }
 
     protected fun addResourceHandlers(registry: ResourceHandlerRegistry) {

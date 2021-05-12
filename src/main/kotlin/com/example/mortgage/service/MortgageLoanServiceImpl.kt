@@ -50,17 +50,17 @@ class MortgageLoanServiceImpl : MortgageLoanService {
 
     override fun findByCustomerId(customerId: Long): List<MortgageLoanDigest> {
         return repository.findByCustomerId(customerId)
-                .stream()
-                .filter(Objects::nonNull)
-                .map { item -> mortgageLoanDigestTransform(item!!) }
-                .collect(Collectors.toList())
+            .stream()
+            .filter(Objects::nonNull)
+            .map { item -> mortgageLoanDigestTransform(item!!) }
+            .collect(Collectors.toList())
     }
 
     override fun findByLoanOfficerId(loanOfficerId: Long): List<MortgageLoanDigest> {
         return repository.findByLoanOfficerId(loanOfficerId).stream()
-                .filter(Objects::nonNull)
-                .map { item -> mortgageLoanDigestTransform(item!!) }
-                .collect(Collectors.toList())
+            .filter(Objects::nonNull)
+            .map { item -> mortgageLoanDigestTransform(item!!) }
+            .collect(Collectors.toList())
     }
 
     override fun updateStatus(mortgageId: Long): MortgageLoanStatusEnum {
@@ -92,10 +92,12 @@ class MortgageLoanServiceImpl : MortgageLoanService {
         val statusEnum: MortgageLoanStatusEnum = mortgageLoanStatusEnumTransform(mortgageLoan.statusEnum)
         val loanOfficerId = mortgageLoan.loanOfficerId ?: -1
 
-        return MortgageLoanDigest(mortgageId = mortgageLoan.mortgageId,
-                customerId = mortgageLoan.customerId,
-                loanOfficerId = loanOfficerId,
-                statusEnum = statusEnum)
+        return MortgageLoanDigest(
+            mortgageId = mortgageLoan.mortgageId,
+            customerId = mortgageLoan.customerId,
+            loanOfficerId = loanOfficerId,
+            statusEnum = statusEnum
+        )
     }
 
 }

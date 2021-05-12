@@ -33,10 +33,10 @@ class LoanOfficerServiceImpl : LoanOfficerService {
 
     override fun getLoanOfficers(): MutableList<LoanOfficerDigest> {
         return repository.findAll()
-                .stream()
-                .filter(Objects::nonNull)
-                .map { item -> loanOfficerDigestTransform(item!!) }
-                .collect(Collectors.toList())
+            .stream()
+            .filter(Objects::nonNull)
+            .map { item -> loanOfficerDigestTransform(item!!) }
+            .collect(Collectors.toList())
     }
 
     override fun updateLoanOfficer(loanOfficerDigest: LoanOfficerDigest): Boolean {
@@ -54,24 +54,28 @@ class LoanOfficerServiceImpl : LoanOfficerService {
     fun loanOfficerDigestTransform(loanOfficer: LoanOfficer): LoanOfficerDigest {
         val activeEnum: LoanOfficerActiveEnum = LoanOfficerActiveEnum.valueOf(loanOfficer.activeEnum.toString())
 
-        return LoanOfficerDigest(loanOfficerId = loanOfficer.loanOfficerId,
-                firstName = loanOfficer.firstName,
-                lastName = loanOfficer.lastName,
-                phone = loanOfficer.phone,
-                email = loanOfficer.email,
-                managerId = loanOfficer.managerId,
-                activeEnum = activeEnum)
+        return LoanOfficerDigest(
+            loanOfficerId = loanOfficer.loanOfficerId,
+            firstName = loanOfficer.firstName,
+            lastName = loanOfficer.lastName,
+            phone = loanOfficer.phone,
+            email = loanOfficer.email,
+            managerId = loanOfficer.managerId,
+            activeEnum = activeEnum
+        )
     }
 
     fun loanOfficerTransform(loanOfficerDigest: LoanOfficerDigest): LoanOfficer {
         val activeEnum: LoanOfficerActive = LoanOfficerActive.valueOf(loanOfficerDigest.activeEnum.toString())
 
-        return LoanOfficer(loanOfficerId = loanOfficerDigest.loanOfficerId,
-                firstName = loanOfficerDigest.firstName,
-                lastName = loanOfficerDigest.lastName,
-                phone = loanOfficerDigest.phone,
-                email = loanOfficerDigest.email,
-                managerId = loanOfficerDigest.managerId,
-                activeEnum = activeEnum)
+        return LoanOfficer(
+            loanOfficerId = loanOfficerDigest.loanOfficerId,
+            firstName = loanOfficerDigest.firstName,
+            lastName = loanOfficerDigest.lastName,
+            phone = loanOfficerDigest.phone,
+            email = loanOfficerDigest.email,
+            managerId = loanOfficerDigest.managerId,
+            activeEnum = activeEnum
+        )
     }
 }

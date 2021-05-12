@@ -34,10 +34,10 @@ class CustomerServiceImpl : CustomerService {
 
     override fun getCustomers(): MutableList<CustomerDigest> {
         return repository.findAll()
-                .stream()
-                .filter(Objects::nonNull)
-                .map { item -> customerDigestTransform(item!!) }
-                .collect(Collectors.toList())
+            .stream()
+            .filter(Objects::nonNull)
+            .map { item -> customerDigestTransform(item!!) }
+            .collect(Collectors.toList())
     }
 
     override fun updateCustomer(customerDigest: CustomerDigest): CustomerDigest? {
@@ -60,18 +60,22 @@ class CustomerServiceImpl : CustomerService {
         val phone: String = customer.phone ?: ""
         val email: String = customer.email ?: ""
 
-        return CustomerDigest(customerId = customerId,
-                firstName = firstName,
-                lastName = lastName,
-                phone = phone,
-                email = email)
+        return CustomerDigest(
+            customerId = customerId,
+            firstName = firstName,
+            lastName = lastName,
+            phone = phone,
+            email = email
+        )
     }
 
     fun customerTransform(customerDigest: CustomerDigest): Customer {
-        return Customer(customerId = customerDigest.customerId,
-                firstName = customerDigest.firstName,
-                lastName = customerDigest.lastName,
-                phone = customerDigest.phone,
-                email = customerDigest.email)
+        return Customer(
+            customerId = customerDigest.customerId,
+            firstName = customerDigest.firstName,
+            lastName = customerDigest.lastName,
+            phone = customerDigest.phone,
+            email = customerDigest.email
+        )
     }
 }
