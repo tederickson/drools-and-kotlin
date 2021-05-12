@@ -5,6 +5,19 @@ The primary goal is invoking business rules within a Kotlin service.
 
 The workflow is a Customer creates a Mortgage Loan and a Loan Officer is assigned to the loan.
 
+## Design
+[Separation of concerns](https://java-design-patterns.com/principles/#separation-of-concerns) is incredibly important.
+The design principal insulates the calling program from changes in either the database or the legacy backend (aka source of truth).
+A prime example is the backend gets a new requirement to encrypt the PII (Personal Identifiable Information).  
+Suddenly the SSN, Email and address is encrypted.
+The separation of concerns prevents a massive overhaul of the front end code.
+- com/example/mortgage/config/ - Spring configuration
+- com/example/mortgage/digest/ - the data returned to the calling program
+- com/example/mortgage/model/ - the data sent to the database
+- com/example/mortgage/repository/ - the methods that can be called on the database.  Spring repositories enable a large number of built in queries.
+- com/example/mortgage/service/ - the business logic
+- com/example/mortgage/transform/ - factories that create either a model or a digest
+
 ## Database
 Since this is a demo use the H2 in-memory database.
 
